@@ -1,0 +1,6 @@
+venv/
+env/
+fartilizer/
+__pycache__/
+*.pyc
+.vscode/

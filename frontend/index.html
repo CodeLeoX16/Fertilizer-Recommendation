@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fertilizer Recommendation System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased">
+  <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">   
+    
+    <!-- Title Section -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center p-3 bg-emerald-100 rounded-full mb-3">
+        <span class="text-3xl">🌱</span>
+      </div>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Fertilizer Recommendation</h1>
+      <p class="text-slate-500 mt-2"> decoupled API-first client for optimal crop nutrient balancing.</p>
+    </div>
+
+    <!-- Result Banner -->
+    <div id="result-box" class="hidden mb-6 p-4 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900 items-center gap-3 shadow-sm">
+      <div class="p-2 bg-emerald-200 rounded-lg text-emerald-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <div>
+        <div class="text-xs font-bold uppercase tracking-wider text-emerald-700">Recommended Fertilizer</div>
+        <div id="result-text" class="text-xl font-bold text-slate-900"></div>
+      </div>
+    </div>
+
+    <!-- Error Banner -->
+    <div id="error-box" class="hidden mb-6 p-4 rounded-xl border border-rose-300 bg-rose-50 text-rose-900 items-center gap-3 shadow-sm">
+      <div class="p-2 bg-rose-200 rounded-lg text-rose-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="text-xs font-bold uppercase tracking-wider text-rose-700">Error</div>
+        <div id="error-text" class="text-sm font-medium text-rose-800"></div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="prediction-form" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+      
+      <!-- Crops & Soil -->
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Crop & Soil Setup</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="soil">Soil Type</label>
+            <select id="soil" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"></select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="crop">Crop Type</label>
+            <select id="crop" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Environment Metrics -->
+      <div class="pt-4 border-t border-slate-100">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Environment Parameters</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="temperature">Temperature (°C)</label>
+            <input type="number" step="any" id="temperature" value="25.0" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="moisture">Moisture</label>
+            <input type="number" step="any" id="moisture" value="0.5" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="rainfall">Rainfall (mm)</label>
+            <input type="number" step="any" id="rainfall" value="200.0" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Nutrients -->
+      <div class="pt-4 border-t border-slate-100">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Nutrient Chemistry</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="ph">pH</label>
+            <input type="number" step="any" id="ph" value="6.5" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="nitrogen">Nitrogen (N)</label>
+            <input type="number" step="any" id="nitrogen" value="50.0" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="phosphorous">Phosphorous (P)</label>
+            <input type="number" step="any" id="phosphorous" value="50.0" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="potassium">Potassium (K)</label>
+            <input type="number" step="any" id="potassium" value="50.0" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="carbon">Carbon</label>
+            <input type="number" step="any" id="carbon" value="1.0" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="pt-4">
+        <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-150 shadow hover:shadow-md flex items-center justify-center gap-2">
+          <span>Predict Recommended Fertilizer</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:8000";
+
+    // Populate dropdowns on load
+    async function loadOptions() {
+      try {
+        const res = await fetch(`${API_BASE}/api/options`);
+        const data = await res.json();
+        
+        const soilSelect = document.getElementById("soil");
+        const cropSelect = document.getElementById("crop");
+
+        data.soils.forEach(soil => {
+          soilSelect.add(new Option(soil, soil));
+        });
+
+        data.crops.forEach(crop => {
+          cropSelect.add(new Option(crop, crop));
+        });
+      } catch (err) {
+        showError("Failed to load options from backend. Ensure backend is running.");
+      }
+    }
+
+    function showError(msg) {
+      document.getElementById("result-box").classList.add("hidden");
+      document.getElementById("result-box").classList.remove("flex");
+      document.getElementById("error-text").innerText = msg;
+      document.getElementById("error-box").classList.remove("hidden");
+      document.getElementById("error-box").classList.add("flex");
+    }
+
+    function showResult(fertilizer) {
+      document.getElementById("error-box").classList.add("hidden");
+      document.getElementById("error-box").classList.remove("flex");
+      document.getElementById("result-text").innerText = fertilizer;
+      document.getElementById("result-box").classList.remove("hidden");
+      document.getElementById("result-box").classList.add("flex");
+    }
+
+    document.getElementById("prediction-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("submit-btn");
+      btn.disabled = true;
+      btn.classList.add("opacity-50");
+
+      const payload = {
+        temperature: parseFloat(document.getElementById("temperature").value),
+        moisture: parseFloat(document.getElementById("moisture").value),
+        rainfall: parseFloat(document.getElementById("rainfall").value),
+        ph: parseFloat(document.getElementById("ph").value),
+        nitrogen: parseFloat(document.getElementById("nitrogen").value),
+        phosphorous: parseFloat(document.getElementById("phosphorous").value),
+        potassium: parseFloat(document.getElementById("potassium").value),
+        carbon: parseFloat(document.getElementById("carbon").value),
+        soil: document.getElementById("soil").value,
+        crop: document.getElementById("crop").value
+      };
+
+      try {
+        const response = await fetch(`${API_BASE}/api/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || "Prediction failed");
+        }
+        showResult(data.recommended_fertilizer);
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove("opacity-50");
+      }
+    });
+
+    loadOptions();
+  </script>
+</body>
+</html>
