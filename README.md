@@ -90,7 +90,14 @@ The platform is designed with a **decoupled, API-first architecture**:
 │ Validation       │ │ - Feature Alignment│
 │                  │ │ - Tree Inference   │
 └──────────────────┘ └──────────────────┘
-📁 Repository StructurePlaintextfertilizer_project/
+```
+
+---
+
+## 📁 Repository Structure
+
+```plaintext
+fertilizer_project/
 ├── backend/
 │   ├── main.py                                # FastAPI application entry point & routes
 │   ├── train_model.py                         # Model training and artifact generation pipeline
@@ -108,7 +115,43 @@ The platform is designed with a **decoupled, API-first architecture**:
 ├── .vscode/                                   # Workspace preferences
 ├── .git/                                      # Git version control directory
 └── .gitignore                                 # Git ignore filters
-📊 Feature Matrix & Parameter SpecsThe predictive model processes 10 distinct features to produce the optimal fertilizer recommendation:FeatureData TypeUnits / FormatTypical RangeDescriptionTemperatureContinuous (float)°C10.0 – 45.0Ambient environmental temperatureMoistureContinuous (float)Fraction / Ratio0.0 – 1.0Current soil moisture saturationRainfallContinuous (float)mm50.0 – 350.0Local precipitation levelPHContinuous (float)pH Index (0–14)4.0 – 9.0Soil acidity/alkalinity scaleNitrogen (N)Continuous (float)Ratio / ppm0.0 – 150.0Readily available soil NitrogenPhosphorous (P)Continuous (float)Ratio / ppm0.0 – 150.0Readily available soil PhosphorusPotassium (K)Continuous (float)Ratio / ppm0.0 – 150.0Readily available soil PotassiumCarbonContinuous (float)Percentage (%)0.1 – 5.0Organic carbon content percentageSoilCategorical (str)Class labelStringSoil type (e.g., Loamy Soil, Clayey)CropCategorical (str)Class labelStringTarget crop intended for cultivation🔌 API Specification1. Dynamic Options Loader (/api/options)Queries trained label encoders to return valid soil categories and supported crop varieties.URL: /api/optionsMethod: GETContent-Type: application/jsonResponse (200 OK)JSON{
+```
+
+---
+
+## 📊 Feature Matrix & Parameter Specs
+
+The predictive model processes 10 distinct features to produce the optimal fertilizer recommendation:
+
+| Feature | Data Type | Units / Format | Typical Range | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| Temperature | Continuous (float) | °C | 10.0 – 45.0 | Ambient environmental temperature |
+| Moisture | Continuous (float) | Fraction / Ratio | 0.0 – 1.0 | Current soil moisture saturation |
+| Rainfall | Continuous (float) | mm | 50.0 – 350.0 | Local precipitation level |
+| PH | Continuous (float) | pH Index (0–14) | 4.0 – 9.0 | Soil acidity/alkalinity scale |
+| Nitrogen (N) | Continuous (float) | Ratio / ppm | 0.0 – 150.0 | Readily available soil Nitrogen |
+| Phosphorous (P) | Continuous (float) | Ratio / ppm | 0.0 – 150.0 | Readily available soil Phosphorus |
+| Potassium (K) | Continuous (float) | Ratio / ppm | 0.0 – 150.0 | Readily available soil Potassium |
+| Carbon | Continuous (float) | Percentage (%) | 0.1 – 5.0 | Organic carbon content percentage |
+| Soil | Categorical (str) | Class label | String | Soil type (e.g., Loamy Soil, Clayey) |
+| Crop | Categorical (str) | Class label | String | Target crop intended for cultivation |
+
+---
+
+## 🔌 API Specification
+
+### 1. Dynamic Options Loader (`/api/options`)
+
+Queries trained label encoders to return valid soil categories and supported crop varieties.
+
+**URL:** `/api/options`  
+**Method:** `GET`  
+**Content-Type:** `application/json`
+
+**Response (200 OK)**
+
+```json
+{
   "soils": [
     "Black",
     "Clayey",
@@ -130,7 +173,20 @@ The platform is designed with a **decoupled, API-first architecture**:
     "Wheat"
   ]
 }
-2. Fertilizer Inference Engine (/api/predict)Executes tabular inference through the Decision Tree classifier to output the target fertilizer formulation.URL: /api/predictMethod: POSTContent-Type: application/jsonRequest PayloadJSON{
+```
+
+### 2. Fertilizer Inference Engine (`/api/predict`)
+
+Executes tabular inference through the Decision Tree classifier to output the target fertilizer formulation.
+
+**URL:** `/api/predict`  
+**Method:** `POST`  
+**Content-Type:** `application/json`
+
+**Request Payload**
+
+```json
+{
   "temperature": 25.0,
   "moisture": 0.5,
   "rainfall": 200.0,
@@ -142,28 +198,116 @@ The platform is designed with a **decoupled, API-first architecture**:
   "soil": "Loamy Soil",
   "crop": "rice"
 }
-Successful Response (200 OK)JSON{
+```
+
+**Successful Response (200 OK)**
+
+```json
+{
   "status": "success",
   "recommended_fertilizer": "Urea"
 }
-Validation Error (400 Bad Request)JSON{
+```
+
+**Validation Error (400 Bad Request)**
+
+```json
+{
   "detail": "Invalid soil type: Peat Soil"
 }
-💻 Local Setup & Installation1. Clone the RepositoryBashgit clone [https://github.com/your-username/fertilizer_project.git](https://github.com/your-username/fertilizer_project.git)
+```
+
+---
+
+## 💻 Local Setup & Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/fertilizer_project.git
 cd fertilizer_project
-2. Virtual Environment ConfigurationBash# Windows
+```
+
+### 2. Virtual Environment Configuration
+
+```bash
+# Windows
 python -m venv fartilizer_recomendatin
 fartilizer_recomendatin\Scripts\activate
 
 # Linux / macOS
 python3 -m venv fartilizer_recomendatin
 source fartilizer_recomendatin/bin/activate
-3. Install DependenciesBashcd backend
+```
+
+### 3. Install Dependencies
+
+```bash
+cd backend
 pip install --upgrade pip
 pip install -r requirements.txt
-4. Train the Model PipelineRun the script to train the model on the local dataset and produce the .pkl artifact binaries:Bashpython train_model.py
-5. Launch FastAPI BackendBashuvicorn main:app --reload --host 0.0.0.0 --port 8000
-Open http://127.0.0.1:8000/docs to test via Swagger UI.6. Serve the Frontend LocallyIn a separate terminal, serve the frontend:Bashcd ../frontend
+```
+
+### 4. Train the Model Pipeline
+
+Run the script to train the model on the local dataset and produce the .pkl artifact binaries:
+
+```bash
+python train_model.py
+```
+
+### 5. Launch FastAPI Backend
+
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Open http://127.0.0.1:8000/docs to test via Swagger UI.
+
+### 6. Serve the Frontend Locally
+
+In a separate terminal, serve the frontend:
+
+```bash
+cd ../frontend
 python -m http.server 3000
-Visit http://localhost:3000 in your web browser. (Note: Update API_BASE in index.html to http://127.0.0.1:8000 for offline local development).☁️ Production DeploymentBackend on RenderPush your code to GitHub.In the Render Dashboard, select New + → Web Service.Link your repository and set the following parameters:Root Directory: backendEnvironment: Python 3Build Command: pip install -r requirements.txtStart Command: uvicorn main:app --host 0.0.0.0 --port $PORTDeploy the service and note your live API base URL.Frontend on NetlifyLog in to Netlify and select Add new site → Deploy manually (or connect your GitHub repository).Choose the frontend/ directory as the publish root.Ensure the API_BASE constant in frontend/index.html references your live Render backend URL:JavaScriptconst API_BASE = "[https://fertilizer-recommendation-backend.onrender.com](https://fertilizer-recommendation-backend.onrender.com)";
-Deploy site.📄 License & CreditsMachine Learning Engine: Scikit-Learn & PandasWeb Layer: FastAPI & StarletteStyling: Tailwind CSSDistributed under the MIT License.
+```
+
+Visit http://localhost:3000 in your web browser. (Note: Update `API_BASE` in `index.html` to `http://127.0.0.1:8000` for offline local development).
+
+---
+
+## ☁️ Production Deployment
+
+### Backend on Render
+
+1. Push your code to GitHub.
+2. In the Render Dashboard, select **New +** → **Web Service**.
+3. Link your repository and set the following parameters:
+   - **Root Directory:** `backend`
+   - **Environment:** Python 3
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+4. Deploy the service and note your live API base URL.
+
+### Frontend on Netlify
+
+1. Log in to Netlify and select **Add new site** → **Deploy manually** (or connect your GitHub repository).
+2. Choose the `frontend/` directory as the publish root.
+3. Ensure the `API_BASE` constant in `frontend/index.html` references your live Render backend URL:
+
+```javascript
+const API_BASE = "https://fertilizer-recommendation-backend.onrender.com";
+```
+
+4. Deploy site.
+
+---
+
+## 📄 License & Credits
+
+- **Machine Learning Engine:** Scikit-Learn & Pandas
+- **Web Layer:** FastAPI & Starlette
+- **Styling:** Tailwind CSS
+
+Distributed under the **MIT License**.
